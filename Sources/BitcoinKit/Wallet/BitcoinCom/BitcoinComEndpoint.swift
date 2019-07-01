@@ -31,9 +31,9 @@ public struct ApiEndPoint {
         init(network: Network) {
             switch network {
             case .mainnet:
-                self.baseUrl = "https://rest.bitcoin.com/v1/"
+                self.baseUrl = "https://rest.bitcoin.com/v2/"
             case .testnet:
-                self.baseUrl = "https://trest.bitcoin.com/v1/"
+                self.baseUrl = "https://trest.bitcoin.com/v2/"
             default:
                 fatalError("Bitcoin.com API is only available for Bitcoin Cash.")
             }
