@@ -35,7 +35,9 @@ final public class BitcoinComUtxoProvider: UtxoProvider {
     // GET API: reload utxos
     public func reload(addresses: [Address], completion: (([UnspentTransaction]) -> Void)?) {
         let url = endpoint.getUtxoURL(with: addresses)
+        print("Request: \(url)")
         let task = URLSession.shared.dataTask(with: url) { [weak self] data, _, _ in
+            print("Response: \(data)")
             guard let data = data else {
                 print("data is nil.")
                 completion?([])
