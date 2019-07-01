@@ -91,9 +91,9 @@ public struct PrivateKey {
         let addressPrefix = checksumDropped[0]
         switch addressPrefix {
         case Network.mainnet.privatekey:
-            network = .mainnet
+            network = .mainnetBTC
         case Network.testnet.privatekey:
-            network = .testnet
+            network = .testnetBTC
         default:
             throw PrivateKeyError.invalidFormat
         }

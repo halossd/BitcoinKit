@@ -40,7 +40,7 @@ public struct ApiEndPoint {
         }
 
         public func getUtxoURL(with addresses: [Address]) -> URL {
-            let parameter: String = "[" + addresses.map { "\"\($0.cashaddr)\"" }.joined(separator: ",") + "]"
+            let parameter: String = addresses.map { "\"\($0.cashaddr)\"" }.joined(separator: "")
             let url = baseUrl + "address/utxo/\(parameter)"
             return ApiEndPoint.convert(string: url)!
         }
