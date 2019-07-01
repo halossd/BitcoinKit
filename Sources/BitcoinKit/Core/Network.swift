@@ -26,10 +26,10 @@
 import Foundation
 
 public class Network {
-    public static let mainnet: Network = BTCMainnet()
-    public static let testnet: Network = BTCTestnet()
-    public static let mainnetBCH: Network = BCHMainnet()
-    public static let testnetBCH: Network = BCHTestnet()
+    public static let mainnet: Network = BCHMainnet()
+    public static let testnet: Network = BCHTestnet()
+    public static let mainnetBTC: Network = BTCMainnet()
+    public static let testnetBTC: Network = BTCTestnet()
 
     public var name: String { return "" }
     public var alias: String { return "" }
