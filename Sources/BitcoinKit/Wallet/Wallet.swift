@@ -133,6 +133,12 @@ final public class Wallet {
         let rawtx = signedTx.serialized().hex
         transactionBroadcaster.post(rawtx, completion: completion)
     }
+
+    //bitcoin
+    public func getBalance(completion: ((ResponseData) -> Void)? = nil) {
+        let api = BitcoinAPI(network: self.network)
+        api.getAddressDetail(address: self.address, completion: completion)
+    }
 }
 
 internal extension Sequence where Element == UnspentTransaction {

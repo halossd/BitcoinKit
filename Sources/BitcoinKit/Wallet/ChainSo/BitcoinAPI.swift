@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import SwiftyJSON
 
 class BitcoinAPI {
     private let endpoint: ApiEndPoint.ChainSo
@@ -39,7 +40,7 @@ class BitcoinAPI {
 
 public struct ResponseData: Codable {
     let status: String
-    let data: Any?
+    let data: JSON?
     let code: Int?
     let message: String?
 }

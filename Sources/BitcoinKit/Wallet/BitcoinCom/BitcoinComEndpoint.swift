@@ -80,7 +80,7 @@ public struct ApiEndPoint {
         }
 
         public func getAddressURL(with address: Address) -> URL {
-            let url = baseUrl + "address/" + chain + address.base58
+            let url = baseUrl + "address/" + chain + "mxLMmp7bQUn5Y2toAZbyjjXiuNHkiPvfA7" //address.base58
             return ApiEndPoint.convert(string: url)!
         }
 

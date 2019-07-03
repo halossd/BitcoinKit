@@ -37,6 +37,7 @@ class ViewController: UIViewController {
         super.viewDidLoad()
         self.createWalletIfNeeded()
         self.updateLabels()
+    
         
 //        let mnemonic = try! Mnemonic.generate()
 //        let seed = Mnemonic.seed(mnemonic: mnemonic)
