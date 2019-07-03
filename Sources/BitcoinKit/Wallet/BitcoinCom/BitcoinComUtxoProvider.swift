@@ -37,7 +37,7 @@ final public class BitcoinComUtxoProvider: UtxoProvider {
         let url = endpoint.getUtxoURL(with: addresses)
         print("Request: \(url)")
         let task = URLSession.shared.dataTask(with: url) { [weak self] data, _, _ in
-            print("Response: \(data)")
+            print("Response: \(data?.description)")
             guard let data = data else {
                 print("data is nil.")
                 completion?([])

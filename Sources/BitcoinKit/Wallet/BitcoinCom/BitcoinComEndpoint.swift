@@ -56,6 +56,7 @@ public struct ApiEndPoint {
             return ApiEndPoint.convert(string: url)!
         }
     }
+
     public static func convert(string: String) -> URL? {
         guard let encoded = string.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) else {
             return nil
@@ -63,6 +64,31 @@ public struct ApiEndPoint {
         return URL(string: encoded)
     }
 
+    public struct ChainSo {
+        private let baseUrl = "https://chain.so/api/v2/"
+        private let chain: String
+
+        init(network: Network) {
+            switch network {
+            case .mainnet:
+                self.chain = "BTC/"
+            case .testnet:
+                self.chain = "BTCTEST/"
+            default:
+                fatalError("Bitcoin.com API is only available for Bitcoin Cash.")
+            }
+        }
+
+        public func getAddressURL(with address: Address) -> URL {
+            let url = baseUrl + "address/" + chain + address.base58
+            return ApiEndPoint.convert(string: url)!
+        }
+
+        public func postRawtxURL(rawtx: String) -> URL {
+            let url = baseUrl + "send_tx/" + chain
+            return ApiEndPoint.convert(string: url)!
+        }
+    }
 }
 
 enum BitcoinComApiInitializationError: Error {

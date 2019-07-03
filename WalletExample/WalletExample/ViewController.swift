@@ -37,6 +37,14 @@ class ViewController: UIViewController {
         super.viewDidLoad()
         self.createWalletIfNeeded()
         self.updateLabels()
+        
+//        let mnemonic = try! Mnemonic.generate()
+//        let seed = Mnemonic.seed(mnemonic: mnemonic)
+//        let keychain = HDKeychain(seed: seed, network: .mainnet)
+//        let privateKey = try! keychain.derivedKey(path: "m/44'/0'/0'/0/0")
+//        let publicKey = try! keychain.derivedKey(path: "M/44'/0'/0'/0/0")
+//        print("prvKey pub: \(privateKey.extendedPublicKey().publicKey().description)")
+//        print("publickey: \(publicKey)")
     }
     
     func createWalletIfNeeded() {
