@@ -9,6 +9,20 @@
 import UIKit
 import SwiftyJSON
 
+public enum APIResult<ResultType: Codable> {
+    case success(ResultType?)
+    case failure(Error?)
+
+    var isSuccess: Bool {
+        switch self {
+        case .success:
+            return true
+        case .failure:
+            return false
+        }
+    }
+}
+
 class BitcoinAPI {
     private let endpoint: ApiEndPoint.ChainSo
 
@@ -16,21 +30,20 @@ class BitcoinAPI {
         self.endpoint = ApiEndPoint.ChainSo(network: network)
     }
 
-    public func getAddressDetail(address: Address, completion: ((ResponseData) -> Void)?) {
+    public func getAddressDetail<ResultType>(address: Address, completion: ((APIResult<ResultType>) -> Void)?) {
         let url = endpoint.getAddressURL(with: address)
         let task = URLSession.shared.dataTask(with: url) { [weak self] data, _, _ in
             guard let data = data else {
                 print("data is nil.")
-                completion?(ResponseData(status: "failed", data: nil, code: nil, message: nil))
                 return
             }
 
-            guard let response = try? JSONDecoder().decode(ResponseData.self, from: data) else {
-                print("解析失败")
-                return
+            do {
+                let response = try JSONDecoder().decode(ResponseObject<ResultType>.self, from: data)
+                completion?(.success(response.data))
+            } catch {
+                completion?(.failure(error))
             }
-
-            completion?(response)
 
         }
         task.resume()
@@ -38,9 +51,9 @@ class BitcoinAPI {
 
 }
 
-public struct ResponseData: Codable {
+public struct ResponseObject<ResultType: Codable>: Codable {
     let status: String
-    let data: JSON?
+    let data: ResultType?
     let code: Int?
     let message: String?
 }

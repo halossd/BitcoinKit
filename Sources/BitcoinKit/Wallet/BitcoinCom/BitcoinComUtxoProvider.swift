@@ -43,13 +43,15 @@ final public class BitcoinComUtxoProvider: UtxoProvider {
                 completion?([])
                 return
             }
-            guard let response = try? JSONDecoder().decode([[BitcoinComUtxoModel]].self, from: data) else {
-                print("decode failed.")
-                completion?([])
-                return
+
+            do {
+                let response = try JSONDecoder().decode([BitcoinComUtxoModel].self, from: data)
+                self?.dataStore.setData(data, forKey: .utxos)
+                completion?(response.asUtxos())
+
+            } catch {
+                print(error)
             }
-            self?.dataStore.setData(data, forKey: .utxos)
-            completion?(response.joined().asUtxos())
         }
         task.resume()
     }
@@ -61,11 +63,11 @@ final public class BitcoinComUtxoProvider: UtxoProvider {
             return []
         }
 
-        guard let response = try? JSONDecoder().decode([[BitcoinComUtxoModel]].self, from: data) else {
+        guard let response = try? JSONDecoder().decode([BitcoinComUtxoModel].self, from: data) else {
             print("data cannot be decoded to response")
             return []
         }
-        return response.joined().asUtxos()
+        return response.asUtxos()
     }
 }
 
@@ -83,6 +85,7 @@ private struct BitcoinComUtxoModel: Codable {
     let amount: Decimal
     let satoshis: UInt64
     let height: Int?
+    let ts: Int?
     let confirmations: Int
     let legacyAddress: String
     let cashAddress: String

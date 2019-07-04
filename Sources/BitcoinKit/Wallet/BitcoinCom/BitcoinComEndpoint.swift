@@ -33,7 +33,7 @@ public struct ApiEndPoint {
             case .mainnet:
                 self.baseUrl = "https://rest.bitcoin.com/v2/"
             case .testnet:
-                self.baseUrl = "https://trest.bitcoin.com/v2/"
+                self.baseUrl = "https://trest.bitcoin.com/v1/"
             default:
                 fatalError("Bitcoin.com API is only available for Bitcoin Cash.")
             }
@@ -41,7 +41,7 @@ public struct ApiEndPoint {
 
         public func getUtxoURL(with addresses: [Address]) -> URL {
             let parameter: String = addresses.map { "\"\($0.cashaddr)\"" }.joined(separator: "")
-            let url = baseUrl + "address/utxo/\(parameter)"
+            let url = baseUrl + "address/utxo/mxLMmp7bQUn5Y2toAZbyjjXiuNHkiPvfA7"
             return ApiEndPoint.convert(string: url)!
         }
 
@@ -80,12 +80,19 @@ public struct ApiEndPoint {
         }
 
         public func getAddressURL(with address: Address) -> URL {
-            let url = baseUrl + "address/" + chain + "mxLMmp7bQUn5Y2toAZbyjjXiuNHkiPvfA7" //address.base58
+            let url = baseUrl + "get_address_balance/" + chain + "mxLMmp7bQUn5Y2toAZbyjjXiuNHkiPvfA7" //address.base58
+            print("Request: \(url)")
             return ApiEndPoint.convert(string: url)!
         }
 
         public func postRawtxURL(rawtx: String) -> URL {
             let url = baseUrl + "send_tx/" + chain
+            return ApiEndPoint.convert(string: url)!
+        }
+
+        public func utxoURL(with address: Address) -> URL {
+            let url = baseUrl + "get_tx_unspent/" + chain + "mxLMmp7bQUn5Y2toAZbyjjXiuNHkiPvfA7" //address.base58
+            print("Request: \(url)")
             return ApiEndPoint.convert(string: url)!
         }
     }

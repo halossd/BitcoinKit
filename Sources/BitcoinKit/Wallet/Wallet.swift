@@ -24,6 +24,7 @@
 //
 
 import Foundation
+import SwiftyJSON
 
 // Some of default parameters of Wallet class [utxoProvider, transactionHistoryProvider, transactionBroadcaster] are only compatible with Bitcoin Cash(BCH).
 // They are using rest.bitcoin.com API endpoints and the endpoints are only available for Bitcoin Cash(BCH).
@@ -128,6 +129,7 @@ final public class Wallet {
         let change: UInt64 = totalAmount - amount - fee
         let destinations: [(Address, UInt64)] = [(toAddress, amount), (address, change)]
         let unsignedTx = try transactionBuilder.build(destinations: destinations, utxos: utxosToSpend)
+        print("utxosToSpend \(utxosToSpend)\n fee \(fee)\n destinations \(destinations)\n unsignedTx \(unsignedTx)")
         let signedTx = try transactionSigner.sign(unsignedTx, with: [privateKey])
 
         let rawtx = signedTx.serialized().hex
@@ -135,10 +137,18 @@ final public class Wallet {
     }
 
     //bitcoin
-    public func getBalance(completion: ((ResponseData) -> Void)? = nil) {
+    public func getBalance(completion: ((APIResult<JSON>) -> Void)? = nil) {
         let api = BitcoinAPI(network: self.network)
         api.getAddressDetail(address: self.address, completion: completion)
     }
+
+    public func getUtxos(completion: ((APIResult<ChainSoUtxoData>) -> Void)? = nil) {
+        let api = ChainSoUtxoProvider(network: self.network)
+        api.reload(address: self.address, completion: completion)
+    }
+
+    
+
 }
 
 internal extension Sequence where Element == UnspentTransaction {
