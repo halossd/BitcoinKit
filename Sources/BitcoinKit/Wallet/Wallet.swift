@@ -63,7 +63,7 @@ final public class Wallet {
         self.addressProvider = addressProvider
             ?? StandardAddressProvider(keys: [privateKey])
         self.utxoProvider = utxoProvider
-            ?? BitcoinComUtxoProvider(network: network, dataStore: userDefaults)
+            ?? ChainSoUtxoProvider(network: network, dataStore: userDefaults)
         self.transactionHistoryProvider = transactionHistoryProvider
             ?? BitcoinComTransactionHistoryProvider(network: network, dataStore: userDefaults)
         self.transactionBroadcaster = transactionBroadcaster

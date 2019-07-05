@@ -8,7 +8,8 @@
 
 import Foundation
 
-class ChainSoUtxoProvider {
+class ChainSoUtxoProvider: UtxoProvider {
+
     private let endpoint: ApiEndPoint.ChainSo
     private let dataStore: BitcoinKitDataStoreProtocol
 
