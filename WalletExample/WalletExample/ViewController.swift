@@ -38,25 +38,25 @@ class ViewController: UIViewController {
         self.createWalletIfNeeded()
         self.updateLabels()
     
-        wallet?.getBalance(completion: { (result) in
-            switch result {
-            case .success(let a) :
-                print(a)
-            case .failure(let error):
-                print(error)
-            }
-        })
-        
-        wallet?.getUtxos(completion: { (result) in
-            switch result {
-            case .success(let a):
-                let b = a?.txs![0]
-                print(b?.asUtxo())
-            case .failure(let error):
-                print(error)
-            }
-
-        })
+//        wallet?.getBalance(completion: { (result) in
+//            switch result {
+//            case .success(let a) :
+//                print(a)
+//            case .failure(let error):
+//                print(error)
+//            }
+//        })
+//
+//        wallet?.getUtxos(completion: { (result) in
+//            switch result {
+//            case .success(let a):
+//                let b = a?.txs![0]
+//                print(b?.asUtxo())
+//            case .failure(let error):
+//                print(error)
+//            }
+//
+//        })
         
 //        let mnemonic = try! Mnemonic.generate()
 //        let seed = Mnemonic.seed(mnemonic: mnemonic)
@@ -68,10 +68,10 @@ class ViewController: UIViewController {
     }
     
     func createWalletIfNeeded() {
-        if wallet == nil {
+//        if wallet == nil {
             wallet = Wallet(privateKey: try! PrivateKey(wif: "cRbHoMJ97XmnEMasBmpQoHiBL7jisqX2M2KdXFguYtrYEtrtjvpT"))
             wallet?.save()
-        }
+//        }
     }
     
     func updateLabels() {
@@ -83,8 +83,16 @@ class ViewController: UIViewController {
     }
     
     func updateBalance() {
-        wallet?.reloadBalance(completion: { [weak self] (utxos) in
-            DispatchQueue.main.async { self?.updateLabels() }
+//        wallet?.reloadBalance(completion: { [weak self] (utxos) in
+//            DispatchQueue.main.async { self?.updateLabels() }
+//        })
+        wallet?.getUtxos(completion: { (result) in
+            switch result {
+            case .success(let a):
+                print(a)
+            case .failure(let error):
+                print(error)
+            }
         })
     }
 
@@ -98,14 +106,14 @@ class ViewController: UIViewController {
         }
         
         do {
-            let address: Address = try AddressFactory.create(addressString)
-            try wallet?.send(to: address, amount: 122200, completion: { [weak self] (response) in
+            let address: Address = try AddressFactory.create("mp9ko3jhiHo9C7QRASQVFSQV7DPXyWq7bW")
+            try wallet?.send(to: address, amount: 10000, completion: { [weak self] (response) in
                 print(response ?? "")
-                self?.updateBalance()
             })
         } catch {
             print(error)
         }
+
     }
 }
 

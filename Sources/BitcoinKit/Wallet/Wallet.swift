@@ -32,7 +32,7 @@ import SwiftyJSON
 final public class Wallet {
     public let privateKey: PrivateKey
     public let publicKey: PublicKey
-    public var address: Address { return publicKey.toCashaddr() }
+    public var address: Address { return publicKey.toLegacy() }
 
     public let network: Network
     private let walletDataStore: BitcoinKitDataStoreProtocol
@@ -102,9 +102,9 @@ final public class Wallet {
         return cache
     }
 
-    public func reloadBalance(completion: (([UnspentTransaction]) -> Void)? = nil) {
-        utxoProvider.reload(addresses: addresses(), completion: completion)
-    }
+//    public func reloadBalance(completion: (([UnspentTransaction]) -> Void)? = nil) {
+//        utxoProvider.reload(addresses: addresses(), completion: completion)
+//    }
 
     public func balance() -> UInt64 {
         return utxoProvider.cached.sum()
@@ -143,8 +143,7 @@ final public class Wallet {
     }
 
     public func getUtxos(completion: ((APIResult<ChainSoUtxoData>) -> Void)? = nil) {
-        let api = ChainSoUtxoProvider(network: self.network, dataStore: UserDefaults.bitcoinKit)
-        api.reload(address: self.address, completion: completion)
+        utxoProvider.reload(address: self.address, completion: completion)
     }
 
 }

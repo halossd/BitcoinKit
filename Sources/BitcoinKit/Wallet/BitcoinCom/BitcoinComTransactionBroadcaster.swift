@@ -25,15 +25,16 @@
 import Foundation
 
 public final class BitcoinComTransactionBroadcaster: TransactionBroadcaster {
-    private let endpoint: ApiEndPoint.BitcoinCom
+    private let endpoint: ApiEndPoint.ChainSo
     public init(network: Network) {
-        self.endpoint = ApiEndPoint.BitcoinCom(network: network)
+        self.endpoint = ApiEndPoint.ChainSo(network: network)
     }
 
     public func post(_ rawtx: String, completion: ((_ txid: String?) -> Void)?) {
         let url = endpoint.postRawtxURL(rawtx: rawtx)
         var request = URLRequest(url: url)
         request.httpMethod = "POST"
+        request.httpBody = try? JSONSerialization.data(withJSONObject: ["tx_hex": rawtx])
         let task = URLSession.shared.dataTask(with: request) { data, _, _ in
             guard let data = data else {
                 print("response is nil.")
