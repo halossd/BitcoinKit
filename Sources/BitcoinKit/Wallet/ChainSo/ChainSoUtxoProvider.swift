@@ -11,12 +11,11 @@ import Foundation
 class ChainSoUtxoProvider {
     private let endpoint: ApiEndPoint.ChainSo
     private let dataStore: BitcoinKitDataStoreProtocol
-    
+
     public init(network: Network, dataStore: BitcoinKitDataStoreProtocol) {
         self.endpoint = ApiEndPoint.ChainSo(network: network)
         self.dataStore = dataStore
     }
-
 
     func reload(address: Address, completion: ((APIResult<ChainSoUtxoData>) -> Void)? = nil) {
         let url = endpoint.utxoURL(with: address)
@@ -36,20 +35,20 @@ class ChainSoUtxoProvider {
         }
         task.resume()
     }
-    
+
     // List utxos
     public var cached: [UnspentTransaction] {
         guard let data = dataStore.getData(forKey: .utxos) else {
             print("data is  nil")
             return []
         }
-        
+
         guard let response = try? JSONDecoder().decode(ResponseObject<ChainSoUtxoData>.self, from: data) else {
             print("data cannot be decoded to response")
             return []
         }
         let txs = response.data?.txs
-        if txs?.count == 0 {
+        if txs!.isEmpty {
             return []
         }
         return txs!.asUtxos()

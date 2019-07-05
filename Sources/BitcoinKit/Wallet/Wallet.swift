@@ -147,8 +147,6 @@ final public class Wallet {
         api.reload(address: self.address, completion: completion)
     }
 
-    
-
 }
 
 internal extension Sequence where Element == UnspentTransaction {
