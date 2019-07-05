@@ -10,12 +10,15 @@ import Foundation
 
 class ChainSoUtxoProvider {
     private let endpoint: ApiEndPoint.ChainSo
-
-    public init(network: Network) {
+    private let dataStore: BitcoinKitDataStoreProtocol
+    
+    public init(network: Network, dataStore: BitcoinKitDataStoreProtocol) {
         self.endpoint = ApiEndPoint.ChainSo(network: network)
+        self.dataStore = dataStore
     }
 
-    func reload<ResultType>(address: Address, completion: ((APIResult<ResultType>) -> Void)? = nil) {
+
+    func reload(address: Address, completion: ((APIResult<ChainSoUtxoData>) -> Void)? = nil) {
         let url = endpoint.utxoURL(with: address)
         let task = URLSession.shared.dataTask(with: url) { [weak self] data, _, _ in
             guard let data = data else {
@@ -24,14 +27,34 @@ class ChainSoUtxoProvider {
             }
 
             do {
-                let response = try JSONDecoder().decode(ResponseObject<ResultType>.self, from: data)
+                let response = try JSONDecoder().decode(ResponseObject<ChainSoUtxoData>.self, from: data)
                 completion?(.success(response.data))
+                self?.dataStore.setData(data, forKey: .utxos)
             } catch {
                 completion?(.failure(error))
             }
         }
         task.resume()
     }
+    
+    // List utxos
+    public var cached: [UnspentTransaction] {
+        guard let data = dataStore.getData(forKey: .utxos) else {
+            print("data is  nil")
+            return []
+        }
+        
+        guard let response = try? JSONDecoder().decode(ResponseObject<ChainSoUtxoData>.self, from: data) else {
+            print("data cannot be decoded to response")
+            return []
+        }
+        let txs = response.data?.txs
+        if txs?.count == 0 {
+            return []
+        }
+        return txs!.asUtxos()
+    }
+
 }
 
 extension Sequence where Element == ChainSoUtxoModel {

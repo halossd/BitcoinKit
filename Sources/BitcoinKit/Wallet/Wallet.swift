@@ -143,7 +143,7 @@ final public class Wallet {
     }
 
     public func getUtxos(completion: ((APIResult<ChainSoUtxoData>) -> Void)? = nil) {
-        let api = ChainSoUtxoProvider(network: self.network)
+        let api = ChainSoUtxoProvider(network: self.network, dataStore: UserDefaults.bitcoinKit)
         api.reload(address: self.address, completion: completion)
     }
 
