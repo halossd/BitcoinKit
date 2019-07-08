@@ -31,10 +31,11 @@ public final class BitcoinComTransactionBroadcaster: TransactionBroadcaster {
     }
 
     public func post(_ rawtx: String, completion: ((_ txid: String?) -> Void)?) {
-        let url = endpoint.postRawtxURL(rawtx: rawtx)
+        let url = endpoint.postRawtxURL() //https://testnet-api.smartbit.com.au/v1/blockchain/pushtx
         var request = URLRequest(url: url)
+        print("url \(url)\n tx \(rawtx)")
         request.httpMethod = "POST"
-        request.httpBody = try? JSONSerialization.data(withJSONObject: ["tx_hex": rawtx])
+        request.httpBody = try? JSONSerialization.data(withJSONObject: ["hex": rawtx])
         let task = URLSession.shared.dataTask(with: request) { data, _, _ in
             guard let data = data else {
                 print("response is nil.")

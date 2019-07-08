@@ -129,9 +129,7 @@ final public class Wallet {
         let change: UInt64 = totalAmount - amount - fee
         let destinations: [(Address, UInt64)] = [(toAddress, amount), (address, change)]
         let unsignedTx = try transactionBuilder.build(destinations: destinations, utxos: utxosToSpend)
-        print("utxosToSpend \(utxosToSpend)\n fee \(fee)\n destinations \(destinations)\n unsignedTx \(unsignedTx)")
         let signedTx = try transactionSigner.sign(unsignedTx, with: [privateKey])
-
         let rawtx = signedTx.serialized().hex
         transactionBroadcaster.post(rawtx, completion: completion)
     }

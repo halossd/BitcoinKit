@@ -67,31 +67,33 @@ public struct ApiEndPoint {
     public struct ChainSo {
         private let baseUrl = "https://chain.so/api/v2/"
         private let chain: String
+        private let pushURL: String
 
         init(network: Network) {
             switch network {
             case .mainnet:
                 self.chain = "BTC"
+                self.pushURL = "https://api.smartbit.com.au/v1/blockchain/pushtx"
             case .testnet:
                 self.chain = "BTCTEST"
+                self.pushURL = "https://testnet-api.smartbit.com.au/v1/blockchain/pushtx"
             default:
                 fatalError("Bitcoin.com API is only available for Bitcoin Cash.")
             }
         }
 
         public func getAddressURL(with address: Address) -> URL {
-            let url = baseUrl + "get_address_balance/" + chain + "/" + "mxLMmp7bQUn5Y2toAZbyjjXiuNHkiPvfA7" //address.base58
+            let url = baseUrl + "get_address_balance/" + chain + "/" + address.base58 // "mxLMmp7bQUn5Y2toAZbyjjXiuNHkiPvfA7" //address.base58
             print("Request: \(url)")
             return ApiEndPoint.convert(string: url)!
         }
 
-        public func postRawtxURL(rawtx: String) -> URL {
-            let url = baseUrl + "send_tx/" + chain
-            return ApiEndPoint.convert(string: url)!
+        public func postRawtxURL() -> URL {
+            return ApiEndPoint.convert(string: pushURL)!
         }
 
         public func utxoURL(with address: Address) -> URL {
-            let url = baseUrl + "get_tx_unspent/" + chain + "/" + "mxLMmp7bQUn5Y2toAZbyjjXiuNHkiPvfA7" //address.base58
+            let url = baseUrl + "get_tx_unspent/" + chain + "/" + address.base58 //"mxLMmp7bQUn5Y2toAZbyjjXiuNHkiPvfA7" //address.base58
             print("Request: \(url)")
             return ApiEndPoint.convert(string: url)!
         }
