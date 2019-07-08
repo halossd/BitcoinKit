@@ -128,6 +128,7 @@ final public class Wallet {
         let totalAmount: UInt64 = utxosToSpend.sum()
         let change: UInt64 = totalAmount - amount - fee
         let destinations: [(Address, UInt64)] = [(toAddress, amount), (address, change)]
+        print("destinations \(destinations)")
         let unsignedTx = try transactionBuilder.build(destinations: destinations, utxos: utxosToSpend)
         let signedTx = try transactionSigner.sign(unsignedTx, with: [privateKey])
         let rawtx = signedTx.serialized().hex
@@ -157,4 +158,8 @@ extension Wallet {
         api.getAddressDetail(address: address, completion: completion)
     }
 
+    static public func getUtxos(network: Network, address: Address, completion: ((APIResult<ChainSoUtxoData>) -> Void)? = nil) {
+        let provider = ChainSoUtxoProvider(network: network, dataStore: UserDefaults.bitcoinKit)
+        provider.reload(address: address, completion: completion)
+    }
 }
