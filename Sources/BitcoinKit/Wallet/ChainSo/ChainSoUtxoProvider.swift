@@ -22,7 +22,7 @@ class ChainSoUtxoProvider: UtxoProvider {
         let url = endpoint.utxoURL(with: address)
         let task = URLSession.shared.dataTask(with: url) { [weak self] data, _, _ in
             guard let data = data else {
-                print("data is nil.")
+                completion?(.failure(NSError(domain: "data is nil", code: 10010, userInfo: nil)))
                 return
             }
 

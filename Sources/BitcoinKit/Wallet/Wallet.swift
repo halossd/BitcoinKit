@@ -136,8 +136,7 @@ final public class Wallet {
 
     //bitcoin
     public func getBalance(completion: ((APIResult<JSON>) -> Void)? = nil) {
-        let api = BitcoinAPI(network: self.network)
-        api.getAddressDetail(address: self.address, completion: completion)
+        Wallet.getBalance(network: self.network, address: self.address, completion: completion)
     }
 
     public func getUtxos(completion: ((APIResult<ChainSoUtxoData>) -> Void)? = nil) {
@@ -150,4 +149,12 @@ internal extension Sequence where Element == UnspentTransaction {
     func sum() -> UInt64 {
         return reduce(UInt64()) { $0 + $1.output.value }
     }
+}
+
+extension Wallet {
+    static public func getBalance(network: Network, address: Address, completion: ((APIResult<JSON>) -> Void)? = nil) {
+        let api = BitcoinAPI(network: network)
+        api.getAddressDetail(address: address, completion: completion)
+    }
+
 }

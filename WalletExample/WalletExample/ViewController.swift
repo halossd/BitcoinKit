@@ -86,14 +86,22 @@ class ViewController: UIViewController {
 //        wallet?.reloadBalance(completion: { [weak self] (utxos) in
 //            DispatchQueue.main.async { self?.updateLabels() }
 //        })
-        wallet?.getUtxos(completion: { (result) in
+        Wallet.getBalance(network: .testnet, address: try! AddressFactory.create("mp9ko3jhiHo9C7QRASQVFSQV7DPXyWq7bW")) { (result) in
             switch result {
             case .success(let a):
                 print(a)
             case .failure(let error):
                 print(error)
             }
-        })
+        }
+//        wallet?.getUtxos(completion: { (result) in
+//            switch result {
+//            case .success(let a):
+//                print(a)
+//            case .failure(let error):
+//                print(error)
+//            }
+//        })
     }
 
     @IBAction func didTapReloadBalanceButton(_ sender: UIButton) {
