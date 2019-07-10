@@ -102,9 +102,9 @@ final public class Wallet {
         return cache
     }
 
-//    public func reloadBalance(completion: (([UnspentTransaction]) -> Void)? = nil) {
-//        utxoProvider.reload(addresses: addresses(), completion: completion)
-//    }
+    public func reloadBalance(completion: (([UnspentTransaction]) -> Void)? = nil) {
+        utxoProvider.reload(addresses: addresses(), completion: completion)
+    }
 
     public func balance() -> UInt64 {
         return utxoProvider.cached.sum()
@@ -128,7 +128,7 @@ final public class Wallet {
         let totalAmount: UInt64 = utxosToSpend.sum()
         let change: UInt64 = totalAmount - amount - fee
         let destinations: [(Address, UInt64)] = [(toAddress, amount), (address, change)]
-        print("destinations \(destinations)")
+        print("destinations \(destinations) \n fee \(fee) \n")
         let unsignedTx = try transactionBuilder.build(destinations: destinations, utxos: utxosToSpend)
         let signedTx = try transactionSigner.sign(unsignedTx, with: [privateKey])
         let rawtx = signedTx.serialized().hex
