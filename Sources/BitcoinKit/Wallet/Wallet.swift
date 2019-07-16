@@ -40,7 +40,7 @@ final public class Wallet {
     private let utxoProvider: UtxoProvider
     private let transactionHistoryProvider: TransactionHistoryProvider
     private let transactionBroadcaster: TransactionBroadcaster
-    private let utxoSelector: UtxoSelector
+    public var utxoSelector: UtxoSelector
     private let transactionBuilder: TransactionBuilder
     private let transactionSigner: TransactionSigner
 
