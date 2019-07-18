@@ -37,7 +37,7 @@ final public class Wallet {
     public let network: Network
     private let walletDataStore: BitcoinKitDataStoreProtocol
     private let addressProvider: AddressProvider
-    private let utxoProvider: UtxoProvider
+    public var utxoProvider: UtxoProvider
     private let transactionHistoryProvider: TransactionHistoryProvider
     private let transactionBroadcaster: TransactionBroadcaster
     public var utxoSelector: UtxoSelector
@@ -158,8 +158,8 @@ extension Wallet {
         api.getAddressDetail(address: address, completion: completion)
     }
 
-    static public func getUtxos(network: Network, address: Address, completion: ((APIResult<ChainSoUtxoData>) -> Void)? = nil) {
-        let provider = ChainSoUtxoProvider(network: network, dataStore: UserDefaults.bitcoinKit)
+    static public func getUtxos(dataSource: BitcoinKitDataStoreProtocol = UserDefaults.bitcoinKit, network: Network, address: Address, completion: ((APIResult<ChainSoUtxoData>) -> Void)? = nil) {
+        let provider = ChainSoUtxoProvider(network: network, dataStore: dataSource)
         provider.reload(address: address, completion: completion)
     }
 }

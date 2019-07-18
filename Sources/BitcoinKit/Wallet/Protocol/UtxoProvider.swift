@@ -38,7 +38,7 @@ extension UtxoProvider {
 
     }
 
-    func reload(addresses: [Address], completion: (([UnspentTransaction]) -> Void)? = nil) {
+    public func reload(addresses: [Address], completion: (([UnspentTransaction]) -> Void)? = nil) {
 
     }
 }

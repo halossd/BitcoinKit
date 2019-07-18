@@ -25,6 +25,10 @@
 import Foundation
 
 final public class BitcoinComUtxoProvider: UtxoProvider {
+    public func reload(address: Address, completion: ((APIResult<ChainSoUtxoData>) -> Void)?) {
+
+    }
+
     private let endpoint: ApiEndPoint.BitcoinCom
     private let dataStore: BitcoinKitDataStoreProtocol
     public init(network: Network, dataStore: BitcoinKitDataStoreProtocol) {

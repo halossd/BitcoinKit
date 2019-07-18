@@ -8,7 +8,10 @@
 
 import Foundation
 
-class ChainSoUtxoProvider: UtxoProvider {
+public class ChainSoUtxoProvider: UtxoProvider {
+    public func reload(addresses: [Address], completion: (([UnspentTransaction]) -> Void)?) {
+
+    }
 
     private let endpoint: ApiEndPoint.ChainSo
     private let dataStore: BitcoinKitDataStoreProtocol
@@ -18,7 +21,7 @@ class ChainSoUtxoProvider: UtxoProvider {
         self.dataStore = dataStore
     }
 
-    func reload(address: Address, completion: ((APIResult<ChainSoUtxoData>) -> Void)? = nil) {
+    public func reload(address: Address, completion: ((APIResult<ChainSoUtxoData>) -> Void)? = nil) {
         let url = endpoint.utxoURL(with: address)
         let task = URLSession.shared.dataTask(with: url) { [weak self] data, _, _ in
             guard let data = data else {
@@ -29,8 +32,9 @@ class ChainSoUtxoProvider: UtxoProvider {
             do {
                 let response = try JSONDecoder().decode(ResponseObject<ChainSoUtxoData>.self, from: data)
                 completion?(.success(response.data))
-                UserDefaults.bitcoinKit.setData(data, forKey: .utxos)
-//                self?.dataStore.setData(data, forKey: .utxos)
+//                UserDefaults.utxosForWallet(walleId: wallet).setData(data, forKey: .utxos)
+//                UserDefaults.bitcoinKit.setData(data, forKey: .utxos)
+                self?.dataStore.setData(data, forKey: .utxos)
             } catch {
                 completion?(.failure(error))
             }

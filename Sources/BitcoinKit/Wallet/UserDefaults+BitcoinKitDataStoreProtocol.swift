@@ -28,6 +28,11 @@ extension UserDefaults: BitcoinKitDataStoreProtocol {
     public static var bitcoinKit: UserDefaults {
         return UserDefaults(suiteName: "BitcoinKit")!
     }
+
+    public static func utxosForWallet(walleId: String) -> UserDefaults {
+        return UserDefaults(suiteName: walleId)!
+    }
+
     public func getString(forKey key: String) -> String? {
         return string(forKey: key)
     }
