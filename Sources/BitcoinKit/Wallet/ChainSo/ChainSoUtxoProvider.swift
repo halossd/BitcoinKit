@@ -23,7 +23,7 @@ public class ChainSoUtxoProvider: UtxoProvider {
 
     public func reload(address: Address, completion: ((APIResult<ChainSoUtxoData>) -> Void)? = nil) {
         let url = endpoint.utxoURL(with: address)
-        let task = URLSession.shared.dataTask(with: url) { [weak self] data, _, _ in
+        let task = URLSession.shared.dataTask(with: url) { data, _, _ in
             guard let data = data else {
                 completion?(.failure(NSError(domain: "data is nil", code: 10_010, userInfo: nil)))
                 return
@@ -34,7 +34,7 @@ public class ChainSoUtxoProvider: UtxoProvider {
                 completion?(.success(response.data))
 //                UserDefaults.utxosForWallet(walleId: wallet).setData(data, forKey: .utxos)
 //                UserDefaults.bitcoinKit.setData(data, forKey: .utxos)
-                self?.dataStore.setData(data, forKey: .utxos)
+                self.dataStore.setData(data, forKey: .utxos)
             } catch {
                 completion?(.failure(error))
             }
