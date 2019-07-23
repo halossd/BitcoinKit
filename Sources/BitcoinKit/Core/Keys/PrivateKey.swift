@@ -80,9 +80,10 @@ public struct PrivateKey {
     }
 
     public init(wif: String) throws {
-        if wif.count < 5 {
+        guard wif.count > 4 else {
             throw PrivateKeyError.invalidFormat
         }
+        
         guard let decoded = Base58.decode(wif) else {
             throw PrivateKeyError.invalidFormat
         }
