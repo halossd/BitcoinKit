@@ -28,17 +28,7 @@ public protocol UtxoProvider {
     // Reload utxos [GET API, SPV, etc...]
     func reload(addresses: [Address], completion: (([UnspentTransaction]) -> Void)?)
 
-    func reload(address: Address, completion: ((APIResult<ChainSoUtxoData>) -> Void)?)
+    func reload(address: Address, completion: ((APIResult<SmartUtxoObject>) -> Void)?)
     // List cached utxos
     var cached: [UnspentTransaction] { get }
-}
-
-extension UtxoProvider {
-    public func reload(address: Address, completion: ((APIResult<ChainSoUtxoData>) -> Void)? = nil) {
-
-    }
-
-    public func reload(addresses: [Address], completion: (([UnspentTransaction]) -> Void)? = nil) {
-
-    }
 }

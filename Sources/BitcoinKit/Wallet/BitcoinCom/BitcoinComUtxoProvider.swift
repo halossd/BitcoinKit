@@ -25,7 +25,7 @@
 import Foundation
 
 final public class BitcoinComUtxoProvider: UtxoProvider {
-    public func reload(address: Address, completion: ((APIResult<ChainSoUtxoData>) -> Void)?) {
+    public func reload(address: Address, completion: ((APIResult<SmartUtxoObject>) -> Void)?) {
 
     }
 

@@ -140,7 +140,7 @@ final public class Wallet {
         Wallet.getBalance(network: self.network, address: self.address, completion: completion)
     }
 
-    public func getUtxos(completion: ((APIResult<ChainSoUtxoData>) -> Void)? = nil) {
+    public func getUtxos(completion: ((APIResult<SmartUtxoObject>) -> Void)? = nil) {
         utxoProvider.reload(address: self.address, completion: completion)
     }
 
@@ -158,7 +158,7 @@ extension Wallet {
         api.getAddressDetail(address: address, completion: completion)
     }
 
-    static public func getUtxos(dataSource: BitcoinKitDataStoreProtocol = UserDefaults.bitcoinKit, network: Network, address: Address, completion: ((APIResult<ChainSoUtxoData>) -> Void)? = nil) {
+    static public func getUtxos(dataSource: BitcoinKitDataStoreProtocol = UserDefaults.bitcoinKit, network: Network, address: Address, completion: ((APIResult<SmartUtxoObject>) -> Void)? = nil) {
         let provider = ChainSoUtxoProvider(network: network, dataStore: dataSource)
         provider.reload(address: address, completion: completion)
     }

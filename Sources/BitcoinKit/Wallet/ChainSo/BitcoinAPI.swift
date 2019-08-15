@@ -32,6 +32,7 @@ class BitcoinAPI {
 
     public func getAddressDetail<ResultType>(address: Address, completion: ((APIResult<ResultType>) -> Void)?) {
         let url = endpoint.getAddressURL(with: address)
+        print(url)
         let task = URLSession.shared.dataTask(with: url) { [weak self] data, _, _ in
             guard let data = data else {
                 print("data is nil.")
@@ -39,8 +40,8 @@ class BitcoinAPI {
             }
 
             do {
-                let response = try JSONDecoder().decode(ResponseObject<ResultType>.self, from: data)
-                completion?(.success(response.data))
+                let response = try JSONDecoder().decode(SmartResponseObject<ResultType>.self, from: data)
+                completion?(.success(response.address))
             } catch {
                 completion?(.failure(error))
             }
@@ -56,4 +57,15 @@ public struct ResponseObject<ResultType: Codable>: Codable {
     let data: ResultType?
     let code: Int?
     let message: String?
+}
+
+public struct SmartResponseObject<ResultType: Codable>: Codable {
+    let success: Bool
+    let address: ResultType?
+}
+
+public struct SmartUtxoObject: Codable {
+    let success: Bool
+    let paging: JSON
+    let unspent: [SmartUtxoModel]
 }

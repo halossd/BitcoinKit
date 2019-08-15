@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import SwiftyJSON
 
 public class ChainSoUtxoProvider: UtxoProvider {
     public func reload(addresses: [Address], completion: (([UnspentTransaction]) -> Void)?) {
@@ -21,7 +22,7 @@ public class ChainSoUtxoProvider: UtxoProvider {
         self.dataStore = dataStore
     }
 
-    public func reload(address: Address, completion: ((APIResult<ChainSoUtxoData>) -> Void)? = nil) {
+    public func reload(address: Address, completion: ((APIResult<SmartUtxoObject>) -> Void)? = nil) {
         let url = endpoint.utxoURL(with: address)
         let task = URLSession.shared.dataTask(with: url) { data, _, _ in
             guard let data = data else {
@@ -30,10 +31,8 @@ public class ChainSoUtxoProvider: UtxoProvider {
             }
 
             do {
-                let response = try JSONDecoder().decode(ResponseObject<ChainSoUtxoData>.self, from: data)
-                completion?(.success(response.data))
-//                UserDefaults.utxosForWallet(walleId: wallet).setData(data, forKey: .utxos)
-//                UserDefaults.bitcoinKit.setData(data, forKey: .utxos)
+                let response = try JSONDecoder().decode(SmartUtxoObject.self, from: data)
+                completion?(.success(response))
                 self.dataStore.setData(data, forKey: .utxos)
             } catch {
                 completion?(.failure(error))
@@ -49,20 +48,20 @@ public class ChainSoUtxoProvider: UtxoProvider {
             return []
         }
 
-        guard let response = try? JSONDecoder().decode(ResponseObject<ChainSoUtxoData>.self, from: data) else {
+        guard let response = try? JSONDecoder().decode(SmartUtxoObject.self, from: data) else {
             print("data cannot be decoded to response")
             return []
         }
-        let txs = response.data?.txs
-        if txs!.isEmpty {
+        let txs = response.unspent
+        if txs.isEmpty {
             return []
         }
-        return txs!.asUtxos()
+        return txs.asUtxos()
     }
 
 }
 
-extension Sequence where Element == ChainSoUtxoModel {
+extension Sequence where Element == SmartUtxoModel {
     public func asUtxos() -> [UnspentTransaction] {
         return compactMap { $0.asUtxo() }
     }
@@ -88,6 +87,27 @@ public struct ChainSoUtxoModel: Codable {
         let txHash: Data = Data(txidData.reversed())
         let output = TransactionOutput(value: UInt64((Double(value) ?? 0) * 100_000_000), lockingScript: lockingScript)
         let outpoint = TransactionOutPoint(hash: txHash, index: UInt32(output_no))
+        return UnspentTransaction(output: output, outpoint: outpoint)
+    }
+}
+
+public struct SmartUtxoModel: Codable {
+    public let addresses: [String]
+    public let value: String
+    public let value_int: Int
+    public let txid: String
+    public let n: Int
+    public let script_pub_key: JSON
+    public let req_sigs: Int
+    public let type: String
+    public let confirmations: Int
+    public let id: Int
+
+    public func asUtxo() -> UnspentTransaction? {
+        guard let lockingScript = Data(hex: script_pub_key["hex"].string!), let txidData = Data(hex: String(txid)) else { return nil }
+        let txHash: Data = Data(txidData.reversed())
+        let output = TransactionOutput(value: UInt64(value_int), lockingScript: lockingScript)
+        let outpoint = TransactionOutPoint(hash: txHash, index: UInt32(n))
         return UnspentTransaction(output: output, outpoint: outpoint)
     }
 }
