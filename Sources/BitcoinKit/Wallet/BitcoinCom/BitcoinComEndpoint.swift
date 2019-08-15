@@ -84,7 +84,7 @@ public struct ApiEndPoint {
         }
 
         public func postRawtxURL() -> URL {
-            let url = baseUrl + "/pushtx"
+            let url = baseUrl + "pushtx"
             return ApiEndPoint.convert(string: url)!
         }
 

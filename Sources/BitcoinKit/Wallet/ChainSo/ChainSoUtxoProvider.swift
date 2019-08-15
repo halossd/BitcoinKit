@@ -24,6 +24,7 @@ public class ChainSoUtxoProvider: UtxoProvider {
 
     public func reload(address: Address, completion: ((APIResult<SmartUtxoObject>) -> Void)? = nil) {
         let url = endpoint.utxoURL(with: address)
+        print(url)
         let task = URLSession.shared.dataTask(with: url) { data, _, _ in
             guard let data = data else {
                 completion?(.failure(NSError(domain: "data is nil", code: 10_010, userInfo: nil)))
